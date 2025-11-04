@@ -7,10 +7,4 @@ endif ()
 
 set(CMAKE_CXX_STANDARD 23)
 
-set(SDLIMAGE_AVIF OFF CACHE BOOL "Disable AVIF support" FORCE)
-
-add_subdirectory(vendor/SDL)
-add_subdirectory(vendor/SDL_image)
-add_subdirectory(vendor/glm)
-
 add_subdirectory(src)

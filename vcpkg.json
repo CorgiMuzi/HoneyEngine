@@ -1,0 +1,22 @@
+{
+  "name" : "honeyengine",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "b27f6bfad367d64f8f0f3296351c5d246e182bb4",
+  "dependencies" : [ {
+    "name" : "glm",
+    "version>=" : "1.0.2"
+  }, {
+    "name" : "sdl3-image",
+    "features": [ "png", "jpeg" ],
+    "version>=" : "3.2.4"
+  }, {
+    "name" : "sdl3",
+    "version>=" : "3.2.24#1"
+  }, {
+    "name" : "vcpkg-cmake-config",
+    "version>=" : "2024-05-23"
+  }, {
+    "name" : "vcpkg-cmake",
+    "version>=" : "2024-04-23"
+  } ]
+}
