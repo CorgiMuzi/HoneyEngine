@@ -45,7 +45,7 @@ struct Resources {
 
     void load(SDLState& state)
     {
-        playerAnims.resize(11);
+        playerAnims.resize(5);
         playerAnims[ANIM_PLAYER_IDLE] = new Animation(11, 1.6f);
 
         idleTex = loadTexture(state.renderer, "data/king_idle.png");
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
     bool isRunning = true;
     while (isRunning) {
         uint64_t nowTime = SDL_GetTicks();
-        float deltaTime = (nowTime - prevTime) / 1000.f;
+        float deltaTime = static_cast<float>(nowTime - prevTime) / SDL_MS_PER_SECOND;
 
         SDL_Event event{0};
         while (SDL_PollEvent(&event)) {
