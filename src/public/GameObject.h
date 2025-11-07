@@ -5,18 +5,45 @@
 
 class Animation;
 
-enum class ObjectType {
+enum class EObjectType {
     EOT_Player,
     EOT_Level,
     EOT_Enemy
+};
+
+enum class EPlayerState {
+    EPS_Idle,
+    EPS_Run,
+    EPS_Jump,
+    EPS_Crouch
+};
+
+struct PlayerData {
+    EPlayerState state;
+};
+
+struct LevelData {
+
+};
+
+struct EnemyData {
+
+};
+
+union ObjectData {
+    PlayerData player;
+    LevelData level;
+    EnemyData enemy;
 };
 
 class GameObject {
 public:
     GameObject();
 
-    ObjectType type;
+    EObjectType type;
+    ObjectData data;
     float direction;
+    float maxSpeedX;
     glm::vec2 position, velocity, acceleration;
     std::vector<Animation*> animations;
     int currentAnimation;

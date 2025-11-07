@@ -1,11 +1,11 @@
 ﻿#include "GameObject.h"
 #include "Animation.h"
 
-GameObject::GameObject()
+GameObject::GameObject() : type(EObjectType::EOT_Level), data{.level = LevelData()}
 {
-    type = ObjectType::EOT_Level;
     direction = 1;
     position = velocity = acceleration = glm::vec2(0);
+    maxSpeedX = 0;
 
     currentAnimation = -1;
     texture = nullptr;
