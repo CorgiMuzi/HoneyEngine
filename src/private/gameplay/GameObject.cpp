@@ -1,5 +1,5 @@
-﻿#include "GameObject.h"
-#include "Animation.h"
+﻿#include "gameplay/GameObject.h"
+#include "gameplay/Animation.h"
 
 GameObject::GameObject() : type(EObjectType::EOT_Level), data{.level = LevelData()}
 {
