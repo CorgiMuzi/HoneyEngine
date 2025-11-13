@@ -5,11 +5,11 @@
 #include <unordered_map>
 #include <memory>
 
-#include "Resource.h"
+class Resource;
 
-class ResourceManager final : public EngineBase {
+class ResourceManager final : public ManagerBase {
 public:
-    explicit ResourceManager(SDL_Renderer* renderer);
+    ResourceManager();
 
     /**
      * @brief Loads a resource from a file
@@ -43,7 +43,6 @@ private:
      */
     bool load(const std::string& filePath);
 
-    SDL_Renderer* m_renderer;
     /**
      * Resource cache : store resources already loaded using the path that exists on the filesystem
      */

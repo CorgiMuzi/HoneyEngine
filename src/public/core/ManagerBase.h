@@ -1,21 +1,15 @@
 ﻿#pragma once
 
-class EngineBase {
+class ManagerBase {
 public:
-    /**
-     * @brief Static function returning static instance of manager class
-     * @return Unique instance of manager class
-     */
-    static EngineBase& GetInstance() {
-        static EngineBase instance;
-        return instance;
-    }
+    ManagerBase() = default;
+    virtual ~ManagerBase() = default;
 
-    // Delete copy constructor and assignment operator
-    EngineBase(const EngineBase&) = delete;
-    EngineBase& operator=(const EngineBase&) = delete;
+    ManagerBase(const ManagerBase&) = delete;
+    ManagerBase& operator=(const ManagerBase&) = delete;
 
-protected:
-    EngineBase() = default;
-    virtual ~EngineBase() = default;
+    // Common interfaces for manager classes
+    virtual bool init() { return true; }
+    virtual void update() {}
+    virtual void term() {}
 };

@@ -3,29 +3,28 @@
 #include <memory>
 #include <SDL3/SDL.h>
 
-struct SDLTextureDeleter {
-    void operator()(SDL_Texture* texture) const {
-        if (texture) {
-            SDL_DestroyTexture(texture);
+struct SurfaceDeleter {
+    void operator()(SDL_Surface* surface) const {
+        if (surface) {
+            SDL_DestroySurface(surface);
         }
     }
 };
 
-class Resourcemanager;
+class ResourceManager;
 
 class Resource {
 public:
-    explicit Resource(const std::string& filePath) : filePath(filePath), baseTexture(nullptr) {
-    }
+    Resource(const Resource&) = delete;
+    Resource& operator=(const Resource&) = delete;
 
 protected:
-    friend class ResourceManager;
+    std::unique_ptr<SDL_Surface, SurfaceDeleter> m_surface;
 
-    void setTexture(std::shared_ptr<SDL_Texture> texture) { baseTexture = texture; }
-    std::string filePath;
-    std::shared_ptr<SDL_Texture> baseTexture;
+private:
+    friend ResourceManager;
+    explicit Resource(SDL_Surface* surface) : m_surface(surface) {}
 
 public:
-    std::string getFilePath() const { return filePath; }
-    std::shared_ptr<SDL_Texture> getBaseTexture() const { return baseTexture; }
+    SDL_Surface* getSurface() const { return m_surface.get(); }
 };

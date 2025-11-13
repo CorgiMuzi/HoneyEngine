@@ -7,17 +7,18 @@
 class SDL_Window;
 class SDL_Renderer;
 class IEventHandler;
-class IManagerBase;
+class ManagerBase;
 
-class EngineCore {
+class EngineBase {
 public:
-    static EngineCore& getInstance() {
-        static EngineCore instance;
+    static EngineBase& getInstance() {
+        static EngineBase instance;
         return instance;
     }
+    ~EngineBase();
 
-    EngineCore(const EngineCore&) = delete;
-    EngineCore& operator=(const EngineCore&) = delete;
+    EngineBase(const EngineBase&) = delete;
+    EngineBase& operator=(const EngineBase&) = delete;
 
     /**
      * @brief Initializes the SDL subsystem and creates a window.
@@ -35,13 +36,28 @@ public:
     /**
      * @brief Cleans up all engine resources and shuts down the SDL subsystem
      */
-    void termEngine();
+    void termEngine() const;
 
     void addEventHandler(std::unique_ptr<IEventHandler> handler);
 
+    /**
+     * @brief Gets a manager of a specific type from the manager list
+     * @tparam T The type of the manager to get (e.g. RenderManager)
+     * @return A pointer to the manager if found, otherwise nullptr
+     */
+    template<typename T>
+    T* getManager() const {
+        for (const auto& manager : m_managers) {
+            if (T* result = dynamic_cast<T*>(manager.get())) {
+                return result;
+            }
+        }
+
+        return nullptr;
+    }
+
 private:
-    EngineCore();
-    ~EngineCore();
+    EngineBase();
 
     /**
      * @brief Processes all pending events from the SDL event queue
