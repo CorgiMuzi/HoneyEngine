@@ -1,1 +1,2 @@
 *.zip filter=git-crypt diff=git-crypt
+asset/** filter=git-crypt diff=git-crypt

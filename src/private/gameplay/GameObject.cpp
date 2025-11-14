@@ -1,13 +1,14 @@
 ﻿#include "gameplay/GameObject.h"
-#include "gameplay/Animation.h"
 
-GameObject::GameObject() : type(EObjectType::EOT_Level), data{.level = LevelData()}
-{
-    direction = 1;
-    position = velocity = acceleration = glm::vec2(0);
-    maxSpeedX = 0;
+void GameObject::update(float deltaTime) {
+    for (const auto& component : m_components) {
+        component->update(deltaTime);
+    }
+}
 
-    currentAnimation = -1;
-    texture = nullptr;
+void GameObject::render(SDL_Renderer* renderer) {
+    for (const auto& component : m_components) {
+        component->render(renderer);
+    }
 }
 

@@ -1,51 +1,52 @@
 ﻿#pragma once
-#include <glm/glm.hpp>
+
 #include <vector>
-#include <SDL3/SDL.h>
+#include <memory>
+#include <algorithm>
 
-class Animation;
+#include "core/IComponent.h"
 
-enum class EObjectType {
-    EOT_Player,
-    EOT_Level,
-    EOT_Enemy
-};
+// Forward declarations
+struct SDL_Renderer;
 
-enum class EPlayerState {
-    EPS_Idle,
-    EPS_Run,
-    EPS_Jump,
-    EPS_Crouch
-};
-
-struct PlayerData {
-    EPlayerState state;
-};
-
-struct LevelData {
-
-};
-
-struct EnemyData {
-
-};
-
-union ObjectData {
-    PlayerData player;
-    LevelData level;
-    EnemyData enemy;
-};
-
+/**
+ * @brief Represents a base object in the game world that can hold various components.
+ */
 class GameObject {
 public:
-    GameObject();
+    GameObject() = default;
+    ~GameObject() = default;
 
-    EObjectType type;
-    ObjectData data;
-    float direction;
-    float maxSpeedX;
-    glm::vec2 position, velocity, acceleration;
-    std::vector<Animation*> animations;
-    int currentAnimation;
-    SDL_Texture* texture;
+    GameObject(const GameObject&) = delete;
+    GameObject& operator=(const GameObject&) = delete;
+
+    void update(float deltaTime);
+    void render(SDL_Renderer* renderer);
+
+    template<typename T, typename... TArgs>
+    T* addComponent(TArgs&&... args) {
+        static_assert(std::is_base_of<IComponent, T>::value, "T must be a descendant of IComponent");
+
+        std::unique_ptr<T> newComponent = std::make_unique<T>(std::forward<TArgs>(args)...);
+        T* pComponent = newComponent.get();
+        newComponent->setOwner(this);
+
+        m_components.emplace_back(std::move(newComponent));
+        pComponent->init();
+        return pComponent;
+    }
+
+    template<typename T>
+    T* getComponent() {
+        for (const auto& component : m_components) {
+            if (T* target = dynamic_cast<T*>(component.get())) {
+                return target;
+            }
+        }
+
+        return nullptr;
+    }
+
+private:
+    std::vector<std::unique_ptr<IComponent>> m_components;
 };
