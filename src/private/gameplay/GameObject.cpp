@@ -1,14 +1,26 @@
 ﻿#include "gameplay/GameObject.h"
+#include "components/TransformComponent.h"
 
-void GameObject::update(float deltaTime) {
-    for (const auto& component : m_components) {
-        component->update(deltaTime);
-    }
+namespace HoneyEngine
+{
+	GameObject::GameObject()
+	{
+		addComponent<TransformComponent>();
+	}
+
+	GameObject::~GameObject()
+	{
+	}
+
+	void GameObject::update(float deltaTime) {
+		for (const auto& component : m_components) {
+			component->update(deltaTime);
+		}
+	}
+
+	void GameObject::render(SDL_Renderer* renderer) {
+		for (const auto& component : m_components) {
+			component->render(renderer);
+		}
+	}
 }
-
-void GameObject::render(SDL_Renderer* renderer) {
-    for (const auto& component : m_components) {
-        component->render(renderer);
-    }
-}
-

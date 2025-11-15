@@ -5,15 +5,18 @@
 #include "resource/ResourceManager.h"
 #include "render/RenderManager.h"
 
-void Scene::init(ResourceManager* resManager, RenderManager* renManager) {
-    const std::string characterTexturePath = "asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png";
+namespace HoneyEngine
+{
+	void Scene::init(ResourceManager* resManager, RenderManager* renManager) {
+		const std::string characterTexturePath = "asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png";
 
-    if (resManager) auto characterResource = resManager->loadResource(characterTexturePath);
+		if (resManager) auto characterResource = resManager->loadResource(characterTexturePath);
 
-}
+	}
 
-void Scene::update(float deltaTime) {
-}
+	void Scene::update(float deltaTime) {
+	}
 
-void Scene::render(SDL_Renderer* renderer) {
+	void Scene::render(SDL_Renderer* renderer) {
+	}
 }

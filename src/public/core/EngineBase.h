@@ -6,86 +6,90 @@
 // Forward declarations
 class SDL_Window;
 class SDL_Renderer;
-class IEventHandler;
-class ManagerBase;
 
-class EngineBase {
-public:
-    static EngineBase& getInstance() {
-        static EngineBase instance;
-        return instance;
-    }
-    ~EngineBase();
+namespace HoneyEngine
+{
+	class IEventHandler;
+	class ManagerBase;
 
-    EngineBase(const EngineBase&) = delete;
-    EngineBase& operator=(const EngineBase&) = delete;
+	class EngineBase {
+	public:
+		static EngineBase& getInstance() {
+			static EngineBase instance;
+			return instance;
+		}
+		~EngineBase();
 
-    /**
-     * @brief Initializes the SDL subsystem and creates a window.
-     * @param w_width The width of the window
-     * @param w_height The height of the window
-     * @return True if initialization was successful, false otherwise
-     */
-    bool initEngine(int w_width, int w_height);
+		EngineBase(const EngineBase&) = delete;
+		EngineBase& operator=(const EngineBase&) = delete;
 
-    /**
-     * @brief Starts and runs the main game loop until the engine is stopped
-     */
-    void runEngine();
+		/**
+		 * @brief Initializes the SDL subsystem and creates a window.
+		 * @param w_width The width of the window
+		 * @param w_height The height of the window
+		 * @return True if initialization was successful, false otherwise
+		 */
+		bool initEngine(int w_width, int w_height);
 
-    /**
-     * @brief Cleans up all engine resources and shuts down the SDL subsystem
-     */
-    void termEngine() const;
+		/**
+		 * @brief Starts and runs the main game loop until the engine is stopped
+		 */
+		void runEngine();
 
-    void addEventHandler(std::unique_ptr<IEventHandler> handler);
+		/**
+		 * @brief Cleans up all engine resources and shuts down the SDL subsystem
+		 */
+		void termEngine() const;
 
-    /**
-     * @brief Gets a manager of a specific type from the manager list
-     * @tparam T The type of the manager to get (e.g. RenderManager)
-     * @return A pointer to the manager if found, otherwise nullptr
-     */
-    template<typename T>
-    T* getManager() const {
-        for (const auto& manager : m_managers) {
-            if (T* result = dynamic_cast<T*>(manager.get())) {
-                return result;
-            }
-        }
+		void addEventHandler(std::unique_ptr<IEventHandler> handler);
 
-        return nullptr;
-    }
+		/**
+		 * @brief Gets a manager of a specific type from the manager list
+		 * @tparam T The type of the manager to get (e.g. RenderManager)
+		 * @return A pointer to the manager if found, otherwise nullptr
+		 */
+		template<typename T>
+		T* getManager() const {
+			for (const auto& manager : m_managers) {
+				if (T* result = dynamic_cast<T*>(manager.get())) {
+					return result;
+				}
+			}
 
-private:
-    EngineBase();
+			return nullptr;
+		}
 
-    /**
-     * @brief Processes all pending events from the SDL event queue
-     */
-    EEngineStatus processEvents();
+	private:
+		EngineBase();
 
-    /**
-     * @brief Updates the logic and states for the current frame
-     */
-    EEngineStatus update();
+		/**
+		 * @brief Processes all pending events from the SDL event queue
+		 */
+		EEngineStatus processEvents();
 
-    /**
-     * @brief Render a single frame of the game
-     */
-    void render();
+		/**
+		 * @brief Updates the logic and states for the current frame
+		 */
+		EEngineStatus update();
 
-    /**
-     * @brief Handles the shutdown process based on the final engine status.
-     * @param finalStatus The status that caused the engine to stop.
-     */
-    void handleShutdown(EEngineStatus finalStatus);
+		/**
+		 * @brief Render a single frame of the game
+		 */
+		void render();
 
-    bool m_isRunning{false};
-    EEngineStatus m_currentStatus{EEngineStatus::Running};
+		/**
+		 * @brief Handles the shutdown process based on the final engine status.
+		 * @param finalStatus The status that caused the engine to stop.
+		 */
+		void handleShutdown(EEngineStatus finalStatus);
 
-    SDL_Window* m_window{nullptr};
-    SDL_Renderer* m_renderer{nullptr};
+		bool m_isRunning{ false };
+		EEngineStatus m_currentStatus{ EEngineStatus::Running };
 
-    std::vector<std::unique_ptr<ManagerBase>> m_managers;
-    std::vector<std::unique_ptr<IEventHandler>> m_eventHandlers;
-};
+		SDL_Window* m_window{ nullptr };
+		SDL_Renderer* m_renderer{ nullptr };
+
+		std::vector<std::unique_ptr<ManagerBase>> m_managers;
+		std::vector<std::unique_ptr<IEventHandler>> m_eventHandlers;
+	};
+}

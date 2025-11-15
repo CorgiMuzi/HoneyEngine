@@ -9,44 +9,50 @@
 // Forward declarations
 struct SDL_Renderer;
 
-/**
- * @brief Represents a base object in the game world that can hold various components.
- */
-class GameObject {
-public:
-    GameObject() = default;
-    ~GameObject() = default;
+namespace HoneyEngine
+{
+	/**
+	 * @brief Represents a base object in the game world that can hold various components.
+	 */
+	class GameObject {
+	public:
+		GameObject();
+		~GameObject();
 
-    GameObject(const GameObject&) = delete;
-    GameObject& operator=(const GameObject&) = delete;
+		GameObject(const GameObject&) = delete;
+		GameObject& operator=(const GameObject&) = delete;
 
-    void update(float deltaTime);
-    void render(SDL_Renderer* renderer);
+		void update(float deltaTime);
+		void render(SDL_Renderer* renderer);
 
-    template<typename T, typename... TArgs>
-    T* addComponent(TArgs&&... args) {
-        static_assert(std::is_base_of<IComponent, T>::value, "T must be a descendant of IComponent");
+		template<typename T, typename... TArgs>
+		T* addComponent(TArgs&&... args) {
+			static_assert(std::is_base_of<IComponent, T>::value, "T must be a descendant of IComponent");
 
-        std::unique_ptr<T> newComponent = std::make_unique<T>(std::forward<TArgs>(args)...);
-        T* pComponent = newComponent.get();
-        newComponent->setOwner(this);
+			std::unique_ptr<T> newComponent = std::make_unique<T>(this, std::forward<TArgs>(args)...);
+			T* pComponent = newComponent.get();
 
-        m_components.emplace_back(std::move(newComponent));
-        pComponent->init();
-        return pComponent;
-    }
+			m_components.emplace_back(std::move(newComponent));
+pComponent->init();
+			return pComponent;
+		}
 
-    template<typename T>
-    T* getComponent() {
-        for (const auto& component : m_components) {
-            if (T* target = dynamic_cast<T*>(component.get())) {
-                return target;
-            }
-        }
+		template<typename T>
+		T* getComponent() {
+			for (const auto& component : m_components) {
+				if (T* target = dynamic_cast<T*>(component.get())) {
+					return target;
+				}
+			}
 
-        return nullptr;
-    }
+			return nullptr;
+		}
 
-private:
-    std::vector<std::unique_ptr<IComponent>> m_components;
-};
+		bool IsActive() const { return m_isActive; }
+		void SetActive(const bool isActive) { m_isActive = isActive; }
+
+	private:
+		std::vector<std::unique_ptr<IComponent>> m_components;
+		bool m_isActive = true;
+	};
+}

@@ -8,69 +8,73 @@
 // Forward declarations
 struct SDL_Texture;
 struct SDL_Renderer;
-class ResourceManager;
 
-class RenderManager final : public ManagerBase
+namespace HoneyEngine
 {
-public:
-    explicit RenderManager(SDL_Renderer* renderer, ResourceManager* resourceManager);
-    ~RenderManager() override;
+	class ResourceManager;
 
-    RenderManager(const RenderManager&) = delete;
-    RenderManager& operator=(const RenderManager&) = delete;
+	class RenderManager final : public ManagerBase
+	{
+	public:
+		explicit RenderManager(SDL_Renderer* renderer, ResourceManager* resourceManager);
+		~RenderManager() override;
 
-    /**
-     * @brief Clears the screen with a default color.
-     */
-    void clearScreen();
-    void clearScreen(const SDL_Color& color);
-    void clearScreen(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+		RenderManager(const RenderManager&) = delete;
+		RenderManager& operator=(const RenderManager&) = delete;
 
-    /**
-     * @brief Presents the final rendered image to the screen.
-     * (This should be called once at the end of each frame's rendering)
-     */
-    void present();
+		/**
+		 * @brief Clears the screen with a default color.
+		 */
+		void clearScreen();
+		void clearScreen(const SDL_Color& color);
+		void clearScreen(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
-    /**
-     * @brief Draws a texture to the screen at a given position.
-     * @param filePath The file path of the texture to draw.
-     * @param x The x-coordinate to draw the texture at.
-     * @param y The y-coordinate to draw the texture at.
-     */
-    void draw(const std::string& filePath, int x, int y);
+		/**
+		 * @brief Presents the final rendered image to the screen.
+		 * (This should be called once at the end of each frame's rendering)
+		 */
+		void present();
 
-    // TODO: Add more draw overloads for drawing with rotation, scaling, etc.
-    // void draw(const std::string& filePath, int x, int y, double angle, ...);
+		/**
+		 * @brief Draws a texture to the screen at a given position.
+		 * @param filePath The file path of the texture to draw.
+		 * @param x The x-coordinate to draw the texture at.
+		 * @param y The y-coordinate to draw the texture at.
+		 */
+		void draw(const std::string& filePath, int x, int y);
 
-    // ==== ManagerBase ====
-    void term() override;
-    // =====================
+		// TODO: Add more draw overloads for drawing with rotation, scaling, etc.
+		// void draw(const std::string& filePath, int x, int y, double angle, ...);
 
-private:
-    /**
-     * @brief Gets a texture from the cache or loads it if not present
-     * @param filePath The file path of the texture
-     * @return A pointer to the SDL_Texture, or nullptr if loading fails
-     */
-    SDL_Texture* getTexture(const std::string& filePath);
+		// ==== ManagerBase ====
+		void term() override;
+		// =====================
 
-    /**
-     * @brief Creates a texture from the file system and adds it to the cache
-     * @param filePath The file path of the texture to load
-     * @return True when create a texture successfully, or false when already texture exists in the cache or failed to create texture
-     */
-    SDL_Texture* createTexture(const std::string& filePath);
+	private:
+		/**
+		 * @brief Gets a texture from the cache or loads it if not present
+		 * @param filePath The file path of the texture
+		 * @return A pointer to the SDL_Texture, or nullptr if loading fails
+		 */
+		SDL_Texture* getTexture(const std::string& filePath);
 
-    // Default color for clearing the screen
-    SDL_Color m_clearColor{0, 0, 0, 255};
+		/**
+		 * @brief Creates a texture from the file system and adds it to the cache
+		 * @param filePath The file path of the texture to load
+		 * @return True when create a texture successfully, or false when already texture exists in the cache or failed to create texture
+		 */
+		SDL_Texture* createTexture(const std::string& filePath);
 
-    SDL_Renderer* m_renderer;
-    ResourceManager* m_resourceManager;
+		// Default color for clearing the screen
+		SDL_Color m_clearColor{ 0, 0, 0, 255 };
 
-    std::unordered_map<std::string, std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)>> m_textureCache;
+		SDL_Renderer* m_renderer;
+		ResourceManager* m_resourceManager;
 
-public:
-    void setClearColor(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) { m_clearColor = {r, g, b, a}; }
-    SDL_Color getClearColor() const { return m_clearColor; }
-};
+		std::unordered_map<std::string, std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)>> m_textureCache;
+
+	public:
+		void setClearColor(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) { m_clearColor = { r, g, b, a }; }
+		SDL_Color getClearColor() const { return m_clearColor; }
+	};
+}

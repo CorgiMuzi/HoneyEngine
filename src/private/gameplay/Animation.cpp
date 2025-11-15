@@ -1,8 +1,11 @@
 ﻿#include "gameplay/Animation.h"
 
-Animation::Animation(int frameCount, float length) : mTimer(length), mFrameCount(frameCount)
+namespace HoneyEngine
 {
+	Animation::Animation(int frameCount, float length) : mTimer(length), mFrameCount(frameCount)
+	{
 
+	}
+
+	Animation::~Animation() {}
 }
-
-Animation::~Animation() {}

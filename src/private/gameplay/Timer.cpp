@@ -1,21 +1,24 @@
 ﻿#include "gameplay/Timer.h"
 
-Timer::Timer(float length) : mLength(length), mElapsedTime(0), bTimeout(false) {
-}
+namespace HoneyEngine
+{
+	Timer::Timer(float length) : mLength(length), mElapsedTime(0), bTimeout(false) {
+	}
 
-Timer::~Timer() {
-}
+	Timer::~Timer() {
+	}
 
-void Timer::step(const float deltaTime) {
-    mElapsedTime += deltaTime;
+	void Timer::step(const float deltaTime) {
+		mElapsedTime += deltaTime;
 
-    if (mElapsedTime >= mLength) {
-        mElapsedTime -= mLength;
-        bTimeout = true;
-    }
-}
+		if (mElapsedTime >= mLength) {
+			mElapsedTime -= mLength;
+			bTimeout = true;
+		}
+	}
 
-void Timer::reset() {
-    mElapsedTime = 0;
-    bTimeout = false;
+	void Timer::reset() {
+		mElapsedTime = 0;
+		bTimeout = false;
+	}
 }

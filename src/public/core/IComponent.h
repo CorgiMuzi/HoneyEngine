@@ -4,35 +4,39 @@
 
 // Forward declarations
 struct SDL_Renderer;
-class GameObject;
 
-class IComponent {
-public:
-    virtual ~IComponent() = default;
+namespace HoneyEngine
+{
+	class GameObject;
 
-    /**
-     * Initialize a component
-     */
-    virtual void init() {}
+	class IComponent {
+	public:
+		virtual ~IComponent() = default;
 
-    /**
-     * Update a component
-     * @param deltaTime The time since the last frame
-     */
-    virtual void update(float deltaTime) {}
+		/**
+		 * Initialize a component
+		 */
+		virtual void init() {}
 
-    /**
-     * Render a component
-     * @param renderer The renderer to render the component if needed
-     */
-    virtual void render(SDL_Renderer* renderer) {}
+		/**
+		 * Update a component
+		 * @param deltaTime The time since the last frame
+		 */
+		virtual void update(float deltaTime) {}
 
-    void setOwner(GameObject* owner) { m_owner = owner; }
-    GameObject& getOwner() const {
-        assert(m_owner != nullptr && "Component must have an owner before used");
-        return *m_owner;
-    }
+		/**
+		 * Render a component
+		 * @param renderer The renderer to render the component if needed
+		 */
+		virtual void render(SDL_Renderer* renderer) {}
 
-private:
-    GameObject* m_owner{nullptr};
-};
+		void setOwner(GameObject* owner) { m_owner = owner; }
+		GameObject* getOwner() const {
+			assert(m_owner != nullptr && "Component must have an owner before used");
+			return m_owner;
+		}
+
+	private:
+		GameObject* m_owner{ nullptr };
+	};
+}
