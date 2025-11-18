@@ -3,10 +3,8 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
-#include <SDL3/SDL_pixels.h>
+#include <SDL3_image/SDL_image.h>
 
-// Forward declarations
-struct SDL_Texture;
 struct SDL_Renderer;
 
 namespace HoneyEngine
@@ -15,6 +13,14 @@ namespace HoneyEngine
 
 	class RenderManager final : public ManagerBase
 	{
+		struct TextureDeleter {
+			void operator()(SDL_Texture* texture) const {
+				if (texture) {
+					SDL_DestroyTexture(texture);
+				}
+			}
+		};
+
 	public:
 		explicit RenderManager(SDL_Renderer* renderer, ResourceManager* resourceManager);
 		~RenderManager() override;
@@ -50,18 +56,23 @@ namespace HoneyEngine
 		void term() override;
 		// =====================
 
-	private:
+		void setClearColor(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) { m_clearColor = { r, g, b, a }; }
+		SDL_Color getClearColor() const { return m_clearColor; }
+
+		SDL_Renderer* getRenderer() const { return m_renderer; }
+
 		/**
-		 * @brief Gets a texture from the cache or loads it if not present
-		 * @param filePath The file path of the texture
-		 * @return A pointer to the SDL_Texture, or nullptr if loading fails
+		 * @brief Gets a texture from the cache or loads it if not present.
+		 * @param filePath The file path of the texture.
+		 * @return A pointer to the SDL_Texture, or nullptr if loading fails.
 		 */
 		SDL_Texture* getTexture(const std::string& filePath);
 
+	private:
 		/**
-		 * @brief Creates a texture from the file system and adds it to the cache
-		 * @param filePath The file path of the texture to load
-		 * @return True when create a texture successfully, or false when already texture exists in the cache or failed to create texture
+		 * @brief Creates a texture from the file system and adds it to the cache.
+		 * @param filePath The file path of the texture to load.
+		 * @return True when create a texture successfully, or false when already texture exists in the cache or failed to create texture.
 		 */
 		SDL_Texture* createTexture(const std::string& filePath);
 
@@ -71,10 +82,6 @@ namespace HoneyEngine
 		SDL_Renderer* m_renderer;
 		ResourceManager* m_resourceManager;
 
-		std::unordered_map<std::string, std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)>> m_textureCache;
-
-	public:
-		void setClearColor(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) { m_clearColor = { r, g, b, a }; }
-		SDL_Color getClearColor() const { return m_clearColor; }
+		std::unordered_map<std::string, std::unique_ptr<SDL_Texture, TextureDeleter>> m_textureCache;
 	};
 }

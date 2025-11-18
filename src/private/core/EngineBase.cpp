@@ -1,8 +1,14 @@
 #include <SDL3/SDL.h>
 #include "core/EngineBase.h"
+
+#include "components/SpriteRendererComponent.h"
 #include "input/KeyboardEventHandler.h"
 #include "resource/ResourceManager.h"
 #include "render/RenderManager.h"
+
+#include "gameplay/GameObject.h"
+#include "resource/Surface.h"
+#include <vector>
 
 namespace HoneyEngine
 {
@@ -29,6 +35,12 @@ namespace HoneyEngine
 		// Initialize managers
 		{
 			auto resourceManager = std::make_unique<ResourceManager>();
+			/* Note TEST_PlayerRendering
+			 * Delete below code after finishing test of rendering player
+			 */
+			const std::vector<std::string> exts{".png", ".jpeg", ".jpg", ".bmp"};
+			resourceManager->registerResourceType<Surface>(exts);
+
 			ResourceManager* pResourceManager = resourceManager.get();
 			m_managers.emplace_back(std::move(resourceManager));
 
@@ -102,7 +114,14 @@ namespace HoneyEngine
 
 		renderManager->setClearColor(20, 10, 30, 255);
 		renderManager->clearScreen();
-		// renderManager->draw();
+
+		/* Note TEST_PlayerRendering
+		 * Delete below code after finishing test of rendering player
+		 */
+		GameObject player;
+		player.addComponent<SpriteRendererComponent>()->setTexture("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
+		player.render(renderManager);
+
 		renderManager->present();
 	}
 

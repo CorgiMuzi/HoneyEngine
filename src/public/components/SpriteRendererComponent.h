@@ -1,27 +1,33 @@
 ﻿#pragma once
 
-#include "core/IComponent.h"
+#include <string>
+#include "IRenderableComponent.h"
 
-// Forward declarations
-struct SDL_Texture;
 struct SDL_Renderer;
 
-namespace HoneyEngine
-{
-	/**
-	 * @brief Renders a sprite(texture) at the GameObject's position
-	 * This component requires a TransformComponent to be present on the same GameObject
-	 */
-	class SpriteRendererComponent : public IComponent {
-	public:
-		explicit SpriteRendererComponent(class GameObject* owner, SDL_Texture* texture);
+namespace HoneyEngine {
+    class GameObject;
+    class RenderManager;
 
-		void init() override;
-		void render(SDL_Renderer* renderer) override;
+    /**
+     * @brief Renders a sprite(texture) at the GameObject's position.
+     * This component requires a TransformComponent to be present on the same GameObject.
+     */
+    class SpriteRendererComponent final : public IRenderableComponent {
+    public:
+        explicit SpriteRendererComponent(GameObject* owner);
 
-	private:
-		SDL_Texture* m_texture;
-		int m_width{ 0 };
-		int m_height{ 0 };
-	};
+        ~SpriteRendererComponent() override;
+
+        void init(GameObject* owner) override;
+        void update(float deltaTime) override;
+        void render(RenderManager* renderManager) override;
+
+        void setTexture(const std::string& texturePath) { m_texturePath = texturePath; }
+
+    private:
+        std::string m_texturePath;
+        int m_width{0};
+        int m_height{0};
+    };
 }

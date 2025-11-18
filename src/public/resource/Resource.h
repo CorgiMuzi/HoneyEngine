@@ -1,33 +1,28 @@
-﻿#pragma once
+#pragma once
 #include <string>
-#include <memory>
-#include <SDL3/SDL.h>
 
 namespace HoneyEngine
 {
-	struct SurfaceDeleter {
-		void operator()(SDL_Surface* surface) const {
-			if (surface) {
-				SDL_DestroySurface(surface);
-			}
-		}
-	};
-
 	class ResourceManager;
 
 	class Resource {
 	public:
+		virtual ~Resource() = default;
+
 		Resource(const Resource&) = delete;
 		Resource& operator=(const Resource&) = delete;
 
+		virtual bool load() = 0;
+
+		explicit Resource(const std::string& filePath) : m_filePath(filePath) {}
 	protected:
-		std::unique_ptr<SDL_Surface, SurfaceDeleter> m_surface;
+
 
 	private:
 		friend ResourceManager;
-		explicit Resource(SDL_Surface* surface) : m_surface(surface) {}
+		std::string m_filePath;
 
 	public:
-		SDL_Surface* getSurface() const { return m_surface.get(); }
+		const std::string& getFilePath() const { return m_filePath; }
 	};
 }

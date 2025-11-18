@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "core/IComponent.h"
+#include "IComponent.h"
 #include <glm/glm.hpp>
 
 namespace HoneyEngine

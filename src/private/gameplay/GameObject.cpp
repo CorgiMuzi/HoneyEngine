@@ -1,5 +1,8 @@
 ﻿#include "gameplay/GameObject.h"
+#include "render/RenderManager.h"
 #include "components/TransformComponent.h"
+#include "components/IRenderableComponent.h"
+#include "components/SpriteRendererComponent.h"
 
 namespace HoneyEngine
 {
@@ -18,9 +21,11 @@ namespace HoneyEngine
 		}
 	}
 
-	void GameObject::render(SDL_Renderer* renderer) {
+	void GameObject::render(RenderManager* renderManager) {
 		for (const auto& component : m_components) {
-			component->render(renderer);
+			if (auto renderable = dynamic_cast<SpriteRendererComponent*>(component.get()); renderable) {
+				renderable->render(renderManager);
+			}
 		}
 	}
 }

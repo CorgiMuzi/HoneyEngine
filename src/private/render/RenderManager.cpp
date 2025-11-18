@@ -1,5 +1,5 @@
 ﻿#include "render/RenderManager.h"
-#include "resource/Resource.h"
+#include "resource/Surface.h"
 #include "resource/ResourceManager.h"
 
 #include <SDL3/SDL.h>
@@ -52,19 +52,29 @@ namespace HoneyEngine
 	}
 
 	SDL_Texture* RenderManager::createTexture(const std::string& filePath) {
-		if (!m_resourceManager) return nullptr;
+		if (!m_resourceManager) {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "ERROR: Resource manager is not set.");
+			return nullptr;
+		}
 
-		auto resource = m_resourceManager->loadResource(filePath);
-		if (!resource || !resource->getSurface()) return nullptr;
+		auto resource = m_resourceManager->load<Surface>(filePath);
+		if (!resource || !resource->getSurface()) {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to load surface from path: %s", filePath.c_str());
+			return nullptr;
+		}
 
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, resource->getSurface());
-		if (!texture) return nullptr;
+		if (!texture) {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to create texture from path: %s", filePath.c_str());
+			return nullptr;
+		}
 
-		auto [it, isInserted] = m_textureCache.emplace(filePath, std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)>(texture, &SDL_DestroyTexture));
+		auto [it, isInserted] = m_textureCache.emplace(filePath, std::unique_ptr<SDL_Texture, TextureDeleter>(texture));
 		if (isInserted) {
 			return it->second.get();
 		}
 		else {
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to insert texture into cache for path: %s", filePath.c_str());
 			SDL_DestroyTexture(texture);
 			return nullptr;
 		}

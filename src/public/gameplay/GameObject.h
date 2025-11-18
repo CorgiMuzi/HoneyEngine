@@ -4,13 +4,14 @@
 #include <memory>
 #include <algorithm>
 
-#include "core/IComponent.h"
+#include "components/IComponent.h"
 
-// Forward declarations
 struct SDL_Renderer;
 
 namespace HoneyEngine
 {
+	class RenderManager;
+
 	/**
 	 * @brief Represents a base object in the game world that can hold various components.
 	 */
@@ -23,7 +24,7 @@ namespace HoneyEngine
 		GameObject& operator=(const GameObject&) = delete;
 
 		void update(float deltaTime);
-		void render(SDL_Renderer* renderer);
+		void render(RenderManager* renderManager);
 
 		template<typename T, typename... TArgs>
 		T* addComponent(TArgs&&... args) {
@@ -33,7 +34,7 @@ namespace HoneyEngine
 			T* pComponent = newComponent.get();
 
 			m_components.emplace_back(std::move(newComponent));
-pComponent->init();
+			pComponent->init(this);
 			return pComponent;
 		}
 
