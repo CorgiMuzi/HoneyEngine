@@ -1,20 +1,51 @@
 ﻿#include "game/Scene.h"
 
-#include <SDL3/SDL_render.h>
-
-#include "resource/ResourceManager.h"
-#include "render/RenderManager.h"
+// Temporal headers for testing
+#include "components/SpriteRendererComponent.h"
 
 namespace HoneyEngine
 {
-	void Scene::init(ResourceManager* resManager, RenderManager* renManager) {
-		const std::string characterTexturePath = "asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png";
+	Scene::Scene(const std::string& name) : m_name(name){
+		if (m_name.empty()) m_name = "Untitled Scene" + std::to_string(reinterpret_cast<uintptr_t>(this));
+		m_world = std::make_unique<GameObject>(name, nullptr);
+	}
 
+	void Scene::init() {
+		auto player = std::make_unique<GameObject>("Player", nullptr);
+		GameObject* pPlayer = player.get();
+		m_gameObjects.emplace_back(std::move(player));
+
+		SpriteRendererComponent* comp = pPlayer->addComponent<SpriteRendererComponent>();
+		comp->setTexture("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
+	}
+
+	void Scene::lateInit() {
+		for (const auto& object : m_gameObjects) {
+			if (object->getParent() == nullptr) {
+				object->setParent(m_world.get());
+			}
+		}
 	}
 
 	void Scene::update(float deltaTime) {
+		for (const auto& object : m_gameObjects) {
+			object->update(deltaTime);
+		}
 	}
 
-	void Scene::render(SDL_Renderer* renderer) {
+	void Scene::lateUpdate(float deltaTime) {
+		for (const auto& object : m_gameObjects) {
+			// TODO: Each objects perform lateUpdate if it needed
+		}
+	}
+
+	void Scene::finalize() {
+
+	}
+
+	void Scene::destroy() {
+		for (const auto& object : m_gameObjects) {
+			// Unload objects from the memory
+		}
 	}
 }

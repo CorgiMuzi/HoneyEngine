@@ -5,11 +5,13 @@
 struct SDL_Renderer;
 
 namespace HoneyEngine {
-    class RenderManager;
+    class RenderManager; // Forward Declaration
 
     class IRenderableComponent : public IComponent {
     public:
         virtual ~IRenderableComponent() override = default;
+
+        void init(GameObject* owner) override;
 
         /**
          * @brief Renders the component to the screen using the provided renderer.

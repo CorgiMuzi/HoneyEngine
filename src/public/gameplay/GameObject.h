@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <string>
 
 #include "components/IComponent.h"
 
@@ -17,14 +18,18 @@ namespace HoneyEngine
 	 */
 	class GameObject {
 	public:
-		GameObject();
+		/**
+		 * @brief Constructs a new GameObject.
+		 * @param name The name of the GameObject.
+		 * @param parent A pointer to the parent GameObject. If is the root object, pass SceneManager::getWorldObject() as the parent.
+		 */
+		explicit GameObject(const std::string& name, GameObject* parent);
 		~GameObject();
 
 		GameObject(const GameObject&) = delete;
 		GameObject& operator=(const GameObject&) = delete;
 
 		void update(float deltaTime);
-		void render(RenderManager* renderManager);
 
 		template<typename T, typename... TArgs>
 		T* addComponent(TArgs&&... args) {
@@ -49,11 +54,14 @@ namespace HoneyEngine
 			return nullptr;
 		}
 
-		bool IsActive() const { return m_isActive; }
-		void SetActive(const bool isActive) { m_isActive = isActive; }
+		const std::string& getName() const { return m_name; }
+
+		void setParent(GameObject* parent) { m_parent = parent; }
+		GameObject* getParent() const { return m_parent; }
 
 	private:
+		GameObject* m_parent;
+		std::string m_name;
 		std::vector<std::unique_ptr<IComponent>> m_components;
-		bool m_isActive = true;
 	};
 }

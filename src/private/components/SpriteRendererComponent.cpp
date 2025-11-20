@@ -2,6 +2,7 @@
 #include "render/RenderManager.h"
 #include "gameplay/GameObject.h"
 #include "components/TransformComponent.h"
+#include "core/EngineBase.h"
 #include <SDL3/SDL.h>
 
 namespace HoneyEngine {
@@ -9,7 +10,9 @@ namespace HoneyEngine {
     }
 
     SpriteRendererComponent::~SpriteRendererComponent() {
-
+        if (auto* renderManager = EngineBase::getInstance()->getManager<RenderManager>()) {
+            renderManager->unregisterComponent(*this);
+        }
     }
 
     void SpriteRendererComponent::init(GameObject* owner) {

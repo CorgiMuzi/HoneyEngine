@@ -1,6 +1,7 @@
 ﻿#include "render/RenderManager.h"
 #include "resource/Surface.h"
 #include "resource/ResourceManager.h"
+#include "components/IRenderableComponent.h"
 
 #include <SDL3/SDL.h>
 
@@ -25,20 +26,22 @@ namespace HoneyEngine
 		SDL_RenderClear(m_renderer);
 	}
 
-	void RenderManager::present() {
-		SDL_RenderPresent(m_renderer);
+	void RenderManager::registerComponent(IRenderableComponent& targetComponent) {
+		m_renderComponents.emplace_back(&targetComponent);
 	}
 
-	void RenderManager::draw(const std::string& filePath, int x, int y) {
-		SDL_Texture* texture = getTexture(filePath);
-		if (!texture) return;
+	void RenderManager::unregisterComponent(IRenderableComponent& targetComponent) {
+		std::erase(m_renderComponents, &targetComponent);
+	}
 
-		SDL_FRect destRect{ static_cast<float>(x), static_cast<float>(y), 0.f, 0.f };
-		SDL_PropertiesID props = SDL_GetTextureProperties(texture);
-		destRect.w = SDL_GetFloatProperty(props, SDL_PROP_TEXTURE_WIDTH_NUMBER, 0.f);
-		destRect.h = SDL_GetFloatProperty(props, SDL_PROP_TEXTURE_HEIGHT_NUMBER, 0.f);
+	void RenderManager::renderAll() {
+		for (const auto& renderable : m_renderComponents) {
+			renderable->render(this);
+		}
+	}
 
-		SDL_RenderTexture(m_renderer, texture, nullptr, &destRect);
+	void RenderManager::present() {
+		SDL_RenderPresent(m_renderer);
 	}
 
 	void RenderManager::term() {

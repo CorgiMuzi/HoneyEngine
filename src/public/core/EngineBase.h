@@ -11,12 +11,13 @@ namespace HoneyEngine
 {
 	class IEventHandler;
 	class ManagerBase;
+	class Scene;
 
 	class EngineBase {
 	public:
-		static EngineBase& getInstance() {
+		static EngineBase* getInstance() {
 			static EngineBase instance;
-			return instance;
+			return &instance;
 		}
 		~EngineBase();
 
@@ -40,6 +41,8 @@ namespace HoneyEngine
 		 * @brief Cleans up all engine resources and shuts down the SDL subsystem
 		 */
 		void termEngine() const;
+
+		void loadScene(std::unique_ptr<Scene> scene);
 
 		void addEventHandler(std::unique_ptr<IEventHandler> handler);
 
@@ -91,5 +94,7 @@ namespace HoneyEngine
 
 		std::vector<std::unique_ptr<ManagerBase>> m_managers;
 		std::vector<std::unique_ptr<IEventHandler>> m_eventHandlers;
+
+		std::unique_ptr<Scene> m_currentScene{nullptr};
 	};
 }

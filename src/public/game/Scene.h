@@ -2,47 +2,62 @@
 
 #include <vector>
 #include <memory>
-
-// Forward declarations
-struct SDL_Renderer;
+#include <string>
+#include "gameplay/GameObject.h"
 
 namespace HoneyEngine
 {
-	class ResourceManager;
-	class RenderManager;
-	class GameObject;
-
-	/**
-	 * @brief
-	 */
 	class Scene {
 	public:
-		Scene() = default;
-		~Scene() = default;
+		explicit Scene(const std::string& name);
+		virtual ~Scene() = default;
 
 		Scene(const Scene&) = delete;
 		Scene& operator=(const Scene&) = delete;
 
+	public:
 		/**
-		 * @brief Initializes the scene, including all game objects within it.
-		 * @param resManager A pointer to the ResourceManager, used for loading and managing assets.
-		 * @param renManager A pointer to the RenderManager, used for handling rendering operations.
+		 * @brief The first initialization function called when the scene is loaded.
+		 * Responsible for resource loading and initial object creation.
 		 */
-		void init(ResourceManager* resManager, RenderManager* renManager);
+		virtual void init();
 
 		/**
-		 * @brief Updates the state of the scene and all game objects.
+		 * @brief Called once after all objects' init() calls are finished, just before the update().
+		 * Used for setting up references between objects.
+		 */
+		virtual void lateInit();
+
+		/**
+		 * @brief Called every frame to update the main logic(e.g., gameplay logic, physics calculations, etc.) of the scene.
 		 * @param deltaTime The time elapsed since the last frame, in seconds.
 		 */
-		void update(float deltaTime);
+		virtual void update(float deltaTime);
 
 		/**
-		 * @brief Renders the scene and all game objects to the provided renderer.
-		 * @param renderer A pointer to the SDL_Renderer to use for drawing.
+		 * @brief Called every frame after all objects' update() calls are finished.
+		 * Mainly used for post-processing logic like camera tracking.
+		 * @param deltaTime The time elapsed since the last frame, in seconds.
 		 */
-		void render(SDL_Renderer* renderer);
+		virtual void lateUpdate(float deltaTime);
+
+		/**
+		 * @brief Cleanup the objects' references just before destroy the all objects and the scene.
+		 * Responsible for releasing used resources.
+		 */
+		virtual void finalize();
+
+		/**
+		 * @brief Destroys and releases all memory associated with the scene.
+		 */
+		virtual void destroy();
+
+		const std::string& getName() const { return m_name; }
+		const GameObject& getWorld() const { return *m_world; }
 
 	private:
+		std::string m_name;
 		std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+		std::unique_ptr<GameObject> m_world;
 	};
 }

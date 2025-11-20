@@ -1,13 +1,9 @@
 #include <SDL3/SDL.h>
 #include "core/EngineBase.h"
-
-#include "components/SpriteRendererComponent.h"
 #include "input/KeyboardEventHandler.h"
 #include "resource/ResourceManager.h"
 #include "render/RenderManager.h"
-
-#include "gameplay/GameObject.h"
-#include "resource/Surface.h"
+#include "game/Scene.h"
 #include <vector>
 
 namespace HoneyEngine
@@ -35,12 +31,6 @@ namespace HoneyEngine
 		// Initialize managers
 		{
 			auto resourceManager = std::make_unique<ResourceManager>();
-			/* Note TEST_PlayerRendering
-			 * Delete below code after finishing test of rendering player
-			 */
-			const std::vector<std::string> exts{".png", ".jpeg", ".jpg", ".bmp"};
-			resourceManager->registerResourceType<Surface>(exts);
-
 			ResourceManager* pResourceManager = resourceManager.get();
 			m_managers.emplace_back(std::move(resourceManager));
 
@@ -64,6 +54,9 @@ namespace HoneyEngine
 	void EngineBase::runEngine() {
 		m_isRunning = true;
 		EEngineStatus currentStatus = EEngineStatus::Running;
+
+		m_currentScene->init();
+		m_currentScene->lateInit();
 
 		while (m_isRunning) {
 			currentStatus = processEvents();
@@ -103,25 +96,16 @@ namespace HoneyEngine
 	}
 
 	EEngineStatus EngineBase::update() {
-		// TODO: Update textures or other physical logic
 		return EEngineStatus::Running;
 	}
 
 	void EngineBase::render() {
-		// TODO: Render character texture and tiles
 		RenderManager* renderManager = getManager<RenderManager>();
 		if (!renderManager) return;
 
 		renderManager->setClearColor(20, 10, 30, 255);
 		renderManager->clearScreen();
-
-		/* Note TEST_PlayerRendering
-		 * Delete below code after finishing test of rendering player
-		 */
-		GameObject player;
-		player.addComponent<SpriteRendererComponent>()->setTexture("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
-		player.render(renderManager);
-
+		renderManager->renderAll();
 		renderManager->present();
 	}
 
@@ -140,6 +124,12 @@ namespace HoneyEngine
 	void EngineBase::termEngine() const {
 		SDL_DestroyRenderer(m_renderer);
 		SDL_DestroyWindow(m_window);
+	}
+
+	void EngineBase::loadScene(std::unique_ptr<Scene> scene) {
+		if (scene == nullptr) return;
+		SDL_SetWindowTitle(m_window, scene->getName().c_str());
+		m_currentScene = std::move(scene);
 	}
 
 	void EngineBase::addEventHandler(std::unique_ptr<IEventHandler> handler) {
