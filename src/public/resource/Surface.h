@@ -13,8 +13,6 @@ namespace HoneyEngine {
         }
     };
 
-    class ResourceManager;
-
     /**
      * @brief Represents a 2D surface of pixels, typically used for images.
      * This class encapsulates an `SDL_Surface`, which is a CPU-side representation
@@ -24,26 +22,21 @@ namespace HoneyEngine {
      */
     class Surface final : public Resource {
         friend ResourceManager;
-
     public:
+        explicit Surface(const std::string& filePath) : Resource(filePath) {}
         ~Surface() override = default;
 
         Surface(const Surface&) = delete;
         Surface& operator=(const Surface&) = delete;
-
-        explicit Surface(const std::string& filePath) : Resource(filePath) {}
-    protected:
-
-        /**
-         * Loads a surface from the path on the filesystem
-         * @return True if the resource was loaded successfully, false otherwise.
-         */
-        bool load() override;
 
     private:
         std::unique_ptr<SDL_Surface, SurfaceDeleter> m_surface;
 
     public:
         SDL_Surface* getSurface() const { return m_surface.get(); }
+
+        void setSurface(SDL_Surface* surface) {
+            m_surface.reset(surface);
+        }
     };
 }

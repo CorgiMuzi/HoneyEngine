@@ -7,7 +7,7 @@
     "version>=" : "1.0.2"
   }, {
     "name" : "sdl3-image",
-    "features": [ "png", "jpeg" ],
+    "features" : [ "png", "jpeg" ],
     "version>=" : "3.2.4"
   }, {
     "name" : "sdl3",
@@ -18,5 +18,8 @@
   }, {
     "name" : "vcpkg-cmake",
     "version>=" : "2024-04-23"
+  }, {
+    "name" : "nlohmann-json",
+    "version>=" : "3.12.0#1"
   } ]
 }

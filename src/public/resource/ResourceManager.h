@@ -1,5 +1,6 @@
 #pragma once
 #include "core/ManagerBase.h"
+#include "resource/IResourceLoader.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -17,22 +18,31 @@ namespace HoneyEngine
 		ResourceManager() = default;
 
 		/**
+		 * Loads configurations (e.g., resource types) for the resource manager
+		 * @param configPath A path of the configuration json file
+		 */
+		void loadConfiguration(const std::string& configPath);
+
+		using ResourceLoader = std::function<std::shared_ptr<Resource>(const std::string&)>;
+
+		/**
 		 * @brief Registers a resource type with its associated file extensions and creation function
 		 * @tparam T The resource class (e.g., Texture, Sound) which must derive from Resource
-		 * @param extensions A list of file extensions (e.g., {".png", ".jpg"}) to associate with this resource type
+		 * @param extension A file extensions (e.g., ".png", ".jpg") to associate with this resource type
 		 */
 		template<typename T>
-		void registerResourceType(const std::vector<std::string>& extensions) {
-			static_assert(std::is_base_of_v<Resource, T>, "T must be a subclass of Resource");
-			for (const auto& ext : extensions) {
-				if (m_resourceFactory.contains(ext)) {
-					std::cerr << "Warning: Overwriting registration for extension - " << ext << std::endl;
-				}
-				m_resourceFactory[ext] = [](const std::string& filePath) {
-					return std::make_shared<T>(filePath);
-				};
-			}
+		void registerExtension(const std::string& extension) {
+			registerLoader(extension, [](const std::string& filePath) {
+				return std::make_shared<T>(filePath);
+			});
 		}
+
+		/**
+		 *
+		 * @param extension
+		 * @param loader
+		 */
+		void registerLoader(const std::string& extension, std::shared_ptr<IResourceLoader> loader);
 
 		/**
 		 * @brief Loads a resource of a specific type from a file path
@@ -66,10 +76,10 @@ namespace HoneyEngine
 	private:
 		std::shared_ptr<Resource> loadResource(const std::string& filePath);
 
-		// Waiting list of resources to load
-		std::vector<std::string> m_resourceQueue;
-		// Maps file extension (e.g., ".png") to a function that creates a resource of the correct type
-		std::unordered_map<std::string, std::function<std::shared_ptr<Resource>(const std::string&)>> m_resourceFactory;
+		// Maps file extension (e.g., ".png") to a name of the resource class
+		std::unordered_map<std::string, std::string> m_extensionToTypeMap;
+		// Maps resource type (e.g., "Surface", "Sound") to a function that creates a resource of the correct type
+		std::unordered_map<std::string, std::shared_ptr<IResourceLoader>> m_loaders;
 		// Caches loaded resources to avoid redundant loading
 		std::unordered_map<std::string, std::shared_ptr<Resource>> m_resourceCache;
 	};

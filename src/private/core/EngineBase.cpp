@@ -2,6 +2,8 @@
 #include "core/EngineBase.h"
 #include "input/KeyboardEventHandler.h"
 #include "resource/ResourceManager.h"
+#include "resource/TextureLoader.h"
+#include "resource/SurfaceLoader.h"
 #include "render/RenderManager.h"
 #include "game/Scene.h"
 #include <vector>
@@ -31,6 +33,10 @@ namespace HoneyEngine
 		// Initialize managers
 		{
 			auto resourceManager = std::make_unique<ResourceManager>();
+			resourceManager->loadConfiguration("config/resources.json");
+			resourceManager->registerLoader("Texture", std::make_shared<TextureLoader>(m_renderer));
+			resourceManager->registerLoader("Surface", std::make_shared<SurfaceLoader>());
+
 			ResourceManager* pResourceManager = resourceManager.get();
 			m_managers.emplace_back(std::move(resourceManager));
 

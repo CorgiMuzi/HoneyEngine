@@ -1,0 +1,19 @@
+﻿{
+  "resource_types": [
+    {
+      "type_name": "Texture",
+      "extensions": [
+        ".png",
+        ".jpg",
+        ".bmp"
+      ]
+    },
+    {
+      "type_name": "Sound",
+      "extensions": [
+        ".wav",
+        ".ogg"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "core/ManagerBase.h"
+#include "resource/Texture.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -14,14 +15,6 @@ namespace HoneyEngine
 
 	class RenderManager final : public ManagerBase
 	{
-		struct TextureDeleter {
-			void operator()(SDL_Texture* texture) const {
-				if (texture) {
-					SDL_DestroyTexture(texture);
-				}
-			}
-		};
-
 	public:
 		explicit RenderManager(SDL_Renderer* renderer, ResourceManager* resourceManager);
 		~RenderManager() override;
@@ -74,24 +67,11 @@ namespace HoneyEngine
 		SDL_Texture* getTexture(const std::string& filePath);
 
 	private:
-		/**
-		 * @brief Creates a texture from the file system and adds it to the cache.
-		 * @param filePath The file path of the texture to load.
-		 * @return True when create a texture successfully, or false when already texture exists in the cache or failed to create texture.
-		 */
-		SDL_Texture* createTexture(const std::string& filePath);
-
 		// Default color for clearing the screen
 		SDL_Color m_clearColor{ 0, 0, 0, 255 };
 
 		SDL_Renderer* m_renderer;
 		ResourceManager* m_resourceManager;
-
-		/**
-		 * @brief Cache for loaded textures
-		 * All objects or components check this cache when needs to render a texture.
-		 */
-		std::unordered_map<std::string, std::unique_ptr<SDL_Texture, TextureDeleter>> m_textureCache;
 
 		/**
 		 * @brief A collection of renderable components
