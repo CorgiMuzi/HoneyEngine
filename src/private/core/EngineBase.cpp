@@ -10,13 +10,13 @@
 
 namespace HoneyEngine
 {
-	bool EngineBase::initEngine(int w_width, int w_height) {
+	bool EngineBase::initEngine(int windowWidth, int windowHeight) {
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize SDL.\nERROR: %s", SDL_GetError());
 			return false;
 		}
 
-		m_window = SDL_CreateWindow("HoneyEngine", w_width, w_height, SDL_WINDOW_RESIZABLE);
+		m_window = SDL_CreateWindow("HoneyEngine", windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 
 		if (!m_window) {
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to create window.\nERROR: %s", SDL_GetError());

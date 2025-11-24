@@ -3,7 +3,6 @@
 #include <vector>
 #include "EngineTypes.h"
 
-// Forward declarations
 class SDL_Window;
 class SDL_Renderer;
 
@@ -26,11 +25,11 @@ namespace HoneyEngine
 
 		/**
 		 * @brief Initializes the SDL subsystem and creates a window.
-		 * @param w_width The width of the window
-		 * @param w_height The height of the window
+		 * @param windowWidth The width of the window
+		 * @param windowHeight The height of the window
 		 * @return True if initialization was successful, false otherwise
 		 */
-		bool initEngine(int w_width, int w_height);
+		bool initEngine(int windowWidth, int windowHeight);
 
 		/**
 		 * @brief Starts and runs the main game loop until the engine is stopped

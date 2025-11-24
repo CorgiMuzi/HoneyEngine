@@ -1,8 +1,9 @@
 ﻿#pragma once
 
 #include "resource/Resource.h"
-#include <SDL3/SDL_render.h>
 #include <memory>
+#include <glm/glm.hpp>
+#include <SDL3/SDL_render.h>
 
 namespace HoneyEngine {
     struct TextureDeleter {
@@ -22,7 +23,7 @@ namespace HoneyEngine {
      */
     class Texture final : public Resource {
     public:
-        explicit Texture(const std::string& filePath) : Resource(filePath){};
+        explicit Texture(const std::string& filePath) : Resource(filePath) {}
         ~Texture() override = default;
 
         Texture(const Texture&) = delete;
@@ -30,12 +31,12 @@ namespace HoneyEngine {
 
     private:
         std::unique_ptr<SDL_Texture, TextureDeleter> m_texture;
+        glm::vec2 m_textureSize{0.f,0.f };
 
     public:
         SDL_Texture* getTexture() const { return m_texture.get();}
+        glm::vec2 getTextureSize() const { return m_textureSize; }
 
-        void setTexture(SDL_Texture* texture) {
-            m_texture.reset(texture);
-        }
+        void setTexture(SDL_Texture* texture);
     };
 }

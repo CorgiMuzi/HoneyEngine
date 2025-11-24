@@ -1,23 +1,23 @@
 ﻿#pragma once
-#include "Timer.h"
+#include <vector>
+#include "resource/Texture.h"
+#include "render/Sprite.h"
 
 namespace HoneyEngine
 {
 	class Animation {
 	public:
-		Animation() : mTimer(0), mFrameCount(0) {
+		explicit Animation(Texture* texture, int unitW, int unitH, int frameCount) : m_texture(texture){
+
 		}
 
-		Animation(int frameCount, float length);
-
-		~Animation();
-
-		void step(const float deltaTime) { mTimer.step(deltaTime); }
-		float getLength() const { return mTimer.getLength(); }
-		int getCurrentFrame() const { return static_cast<int>(mTimer.getElapsedTime() / mTimer.getLength() * static_cast<float>(mFrameCount)); }
+		/**
+		 * @brief Should animation be looped.
+		 */
+		bool isLooping{false};
 
 	private:
-		Timer mTimer;
-		int mFrameCount;
+		Texture* m_texture;
+		std::vector<Sprite> m_sprites;
 	};
 }
