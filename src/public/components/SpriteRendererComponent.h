@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include <string>
+#include <memory>
 #include "IRenderableComponent.h"
+#include "render/Sprite.h"
 
 struct SDL_Renderer;
 
@@ -23,11 +24,12 @@ namespace HoneyEngine {
         void update(float deltaTime) override;
         void render(RenderManager* renderManager) override;
 
-        void setTexture(const std::string& texturePath) { m_texturePath = texturePath; }
-
     private:
-        std::string m_texturePath;
+        std::unique_ptr<Sprite> m_sprite;
         int m_width{0};
         int m_height{0};
+
+    public:
+    void setSprite(std::unique_ptr<Sprite> sprite);
     };
 }

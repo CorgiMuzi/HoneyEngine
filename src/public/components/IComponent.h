@@ -26,13 +26,14 @@ namespace HoneyEngine
 		 */
 		virtual void update(float deltaTime) {}
 
+	private:
+		GameObject* m_owner{ nullptr };
+
+	public:
 		void setOwner(GameObject* owner) { m_owner = owner; }
 		GameObject* getOwner() const {
 			assert(m_owner != nullptr && "Component must have an owner before used");
 			return m_owner;
 		}
-
-	private:
-		GameObject* m_owner{ nullptr };
 	};
 }
