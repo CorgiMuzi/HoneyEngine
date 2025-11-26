@@ -17,8 +17,5 @@ int main(int argc, char* argv[]) {
     engine->loadScene(std::make_unique<Scene>("MainScene"));
 
     engine->runEngine();
-
-
-
     return 0;
 }

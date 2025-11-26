@@ -30,15 +30,12 @@ namespace HoneyEngine {
         Texture& operator=(const Texture&) = delete;
 
     private:
-        std::string m_name{""};
         std::unique_ptr<SDL_Texture, TextureDeleter> m_texture;
         glm::vec2 m_textureSize{0.f,0.f };
 
     public:
-        std::string getName() const {return m_name;}
         SDL_Texture* getTexture() const { return m_texture.get();}
         glm::vec2 getTextureSize() const { return m_textureSize; }
-
         void setTexture(SDL_Texture* texture);
     };
 }

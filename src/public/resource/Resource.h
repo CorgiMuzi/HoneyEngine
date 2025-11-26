@@ -12,7 +12,7 @@ namespace HoneyEngine {
         }
         explicit ResourceID(const uint32_t id) : value(id) {}
 
-        std::string getResourceName() const { return StringRegistry::getInstance()->getString(value); }
+        std::string getResourceName() const { return std::format("{}[{}]", StringRegistry::getInstance()->getString(value), value);}
 
         bool operator==(const ResourceID& other) const { return value == other.value; }
         bool operator!=(const ResourceID& other) const { return value != other.value; }
@@ -21,7 +21,8 @@ namespace HoneyEngine {
 
     class Resource {
     public:
-        explicit Resource(const std::string& filePath) : m_filePath(filePath) {}
+        explicit Resource(const std::string& filePath)
+            : m_filePath(filePath), m_resourceID(filePath) {}
         virtual ~Resource() = default;
 
         Resource(const Resource&) = delete;
@@ -30,9 +31,12 @@ namespace HoneyEngine {
     private:
         friend ResourceManager;
         std::string m_filePath;
+        ResourceID m_resourceID;
 
     public:
+        std::string getName() const { return m_resourceID.getResourceName(); }
         const std::string& getFilePath() const { return m_filePath; }
+        const ResourceID& getResourceID() const { return m_resourceID; }
     };
 }
 

@@ -3,7 +3,7 @@
 
 namespace HoneyEngine {
     uint32_t StringRegistry::addString(std::string_view str) {
-        uint32_t hash = hashString(str);
+        const uint32_t hash = hashString(str);
 
         if (!m_registry.contains(hash)) {
             m_registry[hash] = std::string(str);

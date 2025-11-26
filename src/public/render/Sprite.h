@@ -13,7 +13,6 @@ namespace HoneyEngine {
         void render(RenderManager* renderManager);
 
     private:
-        std::string m_name{""};
         std::shared_ptr<Texture> m_texture;
         SDL_FRect m_srcRect{0, 0, 0, 0};
 
@@ -22,5 +21,6 @@ namespace HoneyEngine {
         SDL_FRect getSrcRect() const { return m_srcRect;}
         float getWidth() const { return m_srcRect.w; }
         float getHeight() const {return m_srcRect.h; }
+        std::string getName() const { return m_texture->getName();}
     };
 }

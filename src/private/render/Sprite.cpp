@@ -6,7 +6,6 @@ namespace HoneyEngine {
     Sprite::Sprite(std::shared_ptr<Texture> texture) : m_texture(std::move(texture)) {
         if (m_texture) {
             glm::vec2 size = m_texture->getTextureSize();
-            m_name = m_texture->getName() + "_sprite";
 
             m_srcRect = {0.f, 0.f, size.x, size.y};
         }else {
@@ -16,7 +15,7 @@ namespace HoneyEngine {
 
     void Sprite::render(RenderManager* renderManager) {
          if (!renderManager) {
-             const std::string err = std::format("Sprite '{}': Sprite needs render manager but is missing.", m_name);
+             const std::string err = std::format("Sprite '{}': Sprite needs render manager but is missing.", getName());
          }
     }
 

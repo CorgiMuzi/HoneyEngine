@@ -16,8 +16,7 @@ namespace HoneyEngine
 		m_gameObjects.emplace_back(std::move(player));
 
 		SpriteRendererComponent* comp = pPlayer->addComponent<SpriteRendererComponent>();
-		// FIXME: SpriteRendererComponent will use 'setSprite()' not 'setTexture()
-		// comp->setTexture("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
+		comp->setSprite("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
 	}
 
 	void Scene::lateInit() {
