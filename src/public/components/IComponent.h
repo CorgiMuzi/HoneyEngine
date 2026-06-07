@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <cassert>
+#include "utils/INamedObject.h"
 
 // Forward declarations
 struct SDL_Renderer;
@@ -9,8 +10,11 @@ namespace HoneyEngine
 {
 	class GameObject;
 
-	class IComponent {
+	class IComponent : public INamedObject {
 	public:
+		// TODO(human): Update this constructor to accept a name parameter
+		// The name should be generated based on the component type
+		// Example: "SpriteRendererComponent#12345" or "Player.SpriteRenderer"
 		virtual ~IComponent() = default;
 
 		/**

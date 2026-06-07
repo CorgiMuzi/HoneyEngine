@@ -2,6 +2,12 @@
 
 // Temporal headers for testing
 #include "components/SpriteRendererComponent.h"
+#include "components/AnimatorComponent.h"
+#include "components/TransformComponent.h"
+#include "resource/Animation.h"
+#include "core/EngineBase.h"
+#include "resource/ResourceManager.h"
+#include <iostream>
 
 namespace HoneyEngine
 {
@@ -11,12 +17,38 @@ namespace HoneyEngine
 	}
 
 	void Scene::init() {
+		// Get the resource manager
+		auto* resourceManager = EngineBase::getInstance()->getManager<ResourceManager>();
+		if (!resourceManager) return;
+
+		// Load the warrior idle sprite sheet texture
+		auto warriorTexture = resourceManager->load<Texture>("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
+
+		// Create the idle animation
+		auto idleAnimation = std::make_shared<Animation>("Warrior_Idle");
+		// The sprite sheet has 8 frames, each 150x150 pixels, arranged horizontally
+		idleAnimation->addFrameFromSpriteSheet(warriorTexture, 192.0f, 192.0f, 8, 0.0f, 0.0f, 0.0f, 0.0f);
+		idleAnimation->setFrameRate(8.0f);  // 8 FPS for smooth idle animation
+		idleAnimation->setLooping(true);
+
+		std::cout << "Animation created with " << idleAnimation->getFrameCount() << " frames" << std::endl;
+
+		// Create the player GameObject (TransformComponent is automatically added)
 		auto player = std::make_unique<GameObject>("Player", nullptr);
 		GameObject* pPlayer = player.get();
 		m_gameObjects.emplace_back(std::move(player));
 
-		SpriteRendererComponent* comp = pPlayer->addComponent<SpriteRendererComponent>();
-		comp->setSprite("asset/Characters/Units/Red Units/Warrior/Warrior_Idle.png");
+		// Set position using the auto-created TransformComponent
+		auto* transform = pPlayer->getComponent<TransformComponent>();
+		transform->position = {400.f, 300.f};  // Center of screen (adjust as needed)
+
+		// Add SpriteRenderer component to display the sprites
+		pPlayer->addComponent<SpriteRendererComponent>();
+
+		// Add Animator component and set the animation
+		auto* animator = pPlayer->addComponent<AnimatorComponent>();
+		animator->setAnimation(idleAnimation);
+		animator->play();
 	}
 
 	void Scene::lateInit() {

@@ -61,6 +61,10 @@ namespace HoneyEngine {
         m_sprite = std::move(sprite);
     }
 
+    void SpriteRendererComponent::setSprite(const Sprite& sprite) {
+        m_sprite = std::make_unique<Sprite>(sprite);
+    }
+
     void SpriteRendererComponent::setSprite(const std::string& filePath) {
         ResourceManager* resourceManager = EngineBase::getInstance()->getManager<ResourceManager>();
         if (!resourceManager) return;

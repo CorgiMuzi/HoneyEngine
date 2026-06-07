@@ -64,7 +64,14 @@ namespace HoneyEngine
 		m_currentScene->init();
 		m_currentScene->lateInit();
 
+		Uint64 lastTime = SDL_GetTicksNS();
+
 		while (m_isRunning) {
+			// Calculate delta time
+			Uint64 currentTime = SDL_GetTicksNS();
+			float deltaTime = (currentTime - lastTime) / 1000000000.0f; // Convert nanoseconds to seconds
+			lastTime = currentTime;
+
 			currentStatus = processEvents();
 			if (currentStatus != EEngineStatus::Running) {
 				m_isRunning = false;
@@ -102,6 +109,18 @@ namespace HoneyEngine
 	}
 
 	EEngineStatus EngineBase::update() {
+		// Update the current scene if one is loaded
+		if (m_currentScene) {
+			// Calculate delta time
+			static Uint64 lastTime = SDL_GetTicksNS();
+			Uint64 currentTime = SDL_GetTicksNS();
+			float deltaTime = (currentTime - lastTime) / 1000000000.0f; // Convert nanoseconds to seconds
+			lastTime = currentTime;
+
+			m_currentScene->update(deltaTime);
+			m_currentScene->lateUpdate(deltaTime);
+		}
+
 		return EEngineStatus::Running;
 	}
 

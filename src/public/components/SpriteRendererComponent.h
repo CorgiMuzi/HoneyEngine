@@ -31,6 +31,7 @@ namespace HoneyEngine {
 
     public:
         void setSprite(std::unique_ptr<Sprite> sprite);
+        void setSprite(const Sprite& sprite);
         void setSprite(const std::string& filePath);
         void setSprite(const std::string& filePath, float x, float y, float width, float height);
     };

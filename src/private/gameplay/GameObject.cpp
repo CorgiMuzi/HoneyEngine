@@ -5,7 +5,9 @@
 
 namespace HoneyEngine
 {
-	GameObject::GameObject(const std::string& name, GameObject* parent) : m_name(name), m_parent(parent)
+	// TODO(human): Update constructor to call INamedObject(name) instead of using m_name
+	GameObject::GameObject(const std::string& name, GameObject* parent)
+		: INamedObject(name), m_parent(parent)
 	{
 		addComponent<TransformComponent>();
 	}
