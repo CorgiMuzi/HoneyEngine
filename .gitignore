@@ -8,6 +8,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/editor.xml
+/NAMING_SYSTEM_TODO.md
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -82,3 +83,6 @@ http-client.private.env.json
 # Apifox Helper cache
 .idea/.cache/.Apifox_Helper
 .idea/ApifoxUploaderProjectSetting.xml
+
+# Obisidna
+docs/

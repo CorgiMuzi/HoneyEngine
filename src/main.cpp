@@ -1,21 +1,12 @@
-﻿#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
-#include "core/EngineBase.h"
+﻿//
+// Created by Jiheon on 2026-06-08.
+//
 
-// Temporal headers for testing purpose
-#include "game/Scene.h"
+#include "core/HoneyEngine.h"
 
-using namespace HoneyEngine;
+int main() {
+    HoneyEngine Engine;
+    Engine.Run();
 
-int main(int argc, char* argv[]) {
-    int w_width = 1600;
-    int w_height = 900;
-
-    EngineBase* engine = EngineBase::getInstance();
-    engine->initEngine(w_width, w_height);
-
-    engine->loadScene(std::make_unique<Scene>("MainScene"));
-
-    engine->runEngine();
     return 0;
 }
